@@ -1,0 +1,9 @@
+.message{
+    color: red;
+    display: none;
+    font-size: 14px;
+}
+
+.error {
+    display: block;
+}

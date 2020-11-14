@@ -11,6 +11,8 @@
       integrity="sha384-CuOF+2SnTUfTwSZjCXf01h7uYhfOBuxIhGKPbfEJ3+FqH/s6cIFN9bGr1HmAg4fQ"
       crossorigin="anonymous"
     />
+
+    <link rel="stylesheet" href="estilos.css">
   </head>
   <body>
     <main class="container">
@@ -22,9 +24,12 @@
           
           <div class="col-5 mb-3">
             <input type="text" id="nameUser" placeholder="Nombre Usuario..." class="form-control" />
+            <p id="errorUser" class="message">*Campo Obligatorio</p>
           </div>
+          
           <div class="col-8">
             <input type="text" id="textMensaje" placeholder="Escribir Mensaje..." class="form-control" />
+            <p id="errorMessage" class="message">*Campo Obligatorio</p>
           </div>
 
           <div class="col-4">
@@ -48,9 +53,9 @@
 
     <script>
       // socket del lado del cliente
-      // const socket = io('http://localhost:5000');
-      const socket = io('https://server-socket-app.herokuapp.com/');
-
+      const socket = io('http://localhost:5000');
+      // const socket = io(process.env.URL_SOCKET_SERVER);
+      
       //   Referencias a los elementos del DOM
       const formulario = document.querySelector('#chatForm');
       const mensajes = document.querySelector('#misMensajes');
@@ -61,7 +66,26 @@
         e.preventDefault();
         const usuario = nameUser.value;
         const nuevoMensaje = textMensaje.value;
-        console.log('nuevoMensaje: ', nuevoMensaje);
+
+        var errorUsername = document.querySelector("#errorUser");
+        var errorMsg = document.querySelector("#errorMessage");
+        
+        if(usuario === '' && nuevoMensaje === '') {
+          errorUsername.classList.add("error");
+          errorMsg.classList.add("error");
+          return;
+        } else if(usuario === '') {
+          errorUsername.classList.add("error");
+          errorMsg.classList.remove("error");
+          return;
+        } else if(nuevoMensaje === '') {
+          errorUsername.classList.remove("error");
+          errorMsg.classList.add("error");
+          return;
+        } else {
+          errorUsername.classList.remove("error");
+          errorMsg.classList.remove("error");
+        }
 
         socket.emit('mensaje-to-server', {
           msg: nuevoMensaje,
@@ -76,9 +100,6 @@
           console.log('mensaje-from-server: ', data);
           mensajes.innerHTML += `<li>${data.user}: ${data.msg}</li>`;
       });
-
-      
-
       
 
       // Escucha un evento emitido desde el servidor
