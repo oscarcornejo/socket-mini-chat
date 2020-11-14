@@ -53,8 +53,8 @@
 
     <script>
       // socket del lado del cliente
-      const socket = io('http://localhost:5000');
-      // const socket = io(process.env.URL_SOCKET_SERVER);
+      // const socket = io('http://localhost:5000');
+      const socket = io(process.env.URL_SOCKET_SERVER);
       
       //   Referencias a los elementos del DOM
       const formulario = document.querySelector('#chatForm');
